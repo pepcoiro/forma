@@ -69,8 +69,13 @@ if(!loadAutosave()){
 // Documento vuoto iniziale.
 objectCount=0;renderAll();setZoom(Math.min((workspace.clientWidth-60)/pageW,(workspace.clientHeight-60)/pageH,1));saveHistory();
 }else{
-// Rimuove dal vecchio autosalvataggio gli elementi della locandina predefinita.
-objects.querySelectorAll('[data-id]').forEach(n=>{if(/^obj-[1-9]$/.test(n.dataset.id))n.remove()});
+// Pulisce eventuali elementi della locandina d'esempio rimasti in vecchi autosalvataggi.
+const starterText='NOME ORGANIZZATORE  /  CITTÀ';
+const hasStarter=allObjects().some(n=>n.textContent.trim()===starterText);
+allObjects().forEach(n=>{
+if(n.textContent.trim()===starterText||/^obj-[1-9]$/.test(n.dataset.id||''))n.remove();
+else if(hasStarter&&['Sfondo','Fascia superiore','Categoria','Titolo 1','Titolo 2','Elemento grafico','Cerchio interno','Data evento','Dettagli','Organizzatore'].includes(n.dataset.name))n.remove();
+});
 renderAll();setZoom(Math.min((workspace.clientWidth-60)/pageW,(workspace.clientHeight-60)/pageH,1));saveHistory()
 }
 })();
